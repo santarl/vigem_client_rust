@@ -47,7 +47,7 @@ impl Default for DS4Report {
 #[derive(Copy, Clone, Eq, PartialEq)]
 #[repr(C, packed)]
 pub struct DS4TouchPoint {
-    /// Last bit is set if the touch point is inactive.
+    /// bit 7 is 0 if finger is down
     contact: u8,
     x_lo: u8,
     x_hi_y_lo: u8, // 4 higher bits of X, 4 lower bits of Y
@@ -80,7 +80,7 @@ impl DS4TouchPoint {
         let x = x.min(1920);
         let y = y.min(942);
         DS4TouchPoint {
-            contact: 1 << 7,
+            contact: 0,
             x_lo: (x & 0xFF) as u8,
             x_hi_y_lo: (((x >> 8) & 0xF) << 4) as u8 | ((y & 0xF) as u8),
             y_hi: (y >> 4) as u8,
@@ -114,7 +114,7 @@ impl Default for DS4TouchPoint {
     #[inline]
     fn default() -> Self {
         DS4TouchPoint {
-            contact: 0,
+            contact: 1 << 7,
             x_lo: 0,
             x_hi_y_lo: 0,
             y_hi: 0,
