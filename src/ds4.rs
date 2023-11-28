@@ -111,6 +111,8 @@ impl DSRequestNotification {
 					//  What happens if a new target is plugged inbetween calls to poll and request...
 					match ds4rn.buffer {
 						bus::RequestNotificationVariant::DS4(ref mut buffer) => { buffer.SerialNo = 0; },
+						#[allow(unreachable_patterns)]
+						_ => unreachable!()
 					}
 					Err(Error::OperationAborted)
 				},
