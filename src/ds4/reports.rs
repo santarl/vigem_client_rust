@@ -393,7 +393,7 @@ impl From<DS4Status> for u16 {
 ///    .trigger_r(0)
 ///    .build();
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Default)]
 #[must_use = "This struct serves as a builder,
               and must be consumed by calling either .build() or .into()"]
 pub struct DS4ReportBuilder {
@@ -500,21 +500,6 @@ impl DS4ReportBuilder {
     }
 }
 
-impl Default for DS4ReportBuilder {
-    fn default() -> Self {
-        DS4ReportBuilder {
-            thumb_lx: None,
-            thumb_ly: None,
-            thumb_rx: None,
-            thumb_ry: None,
-            buttons: DS4Buttons::default(),
-            special: DS4SpecialButtons::default(),
-            trigger_l: None,
-            trigger_r: None,
-        }
-    }
-}
-
 impl From<DS4ReportBuilder> for DS4Report {
     #[inline]
     fn from(builder: DS4ReportBuilder) -> Self {
@@ -576,7 +561,7 @@ impl From<DS4ReportBuilder> for DS4Report {
 ///     .status(DS4Status::with_battery_status(BatteryStatus::Charging(5)))
 ///     .build();
 /// ```
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Debug, Eq, PartialEq, Default)]
 #[must_use = "This struct serves as a builder,
               and must be consumed by calling either .build() or .into()"]
 pub struct DS4ReportExBuilder {
@@ -797,32 +782,6 @@ impl DS4ReportExBuilder {
             num_touch_reports: self.num_touch_reports,
             touch_reports: self.touch_reports,
             reserved: [0; 3],
-        }
-    }
-}
-
-impl Default for DS4ReportExBuilder {
-    fn default() -> Self {
-        DS4ReportExBuilder {
-            thumb_lx: None,
-            thumb_ly: None,
-            thumb_rx: None,
-            thumb_ry: None,
-            buttons: DS4Buttons::default(),
-            special: DS4SpecialButtons::default(),
-            trigger_l: None,
-            trigger_r: None,
-            timestamp: None,
-            temp: None,
-            gyro_x: None,
-            gyro_y: None,
-            gyro_z: None,
-            accel_x: None,
-            accel_y: None,
-            accel_z: None,
-            status: DS4Status::default(),
-            num_touch_reports: 0,
-            touch_reports: [DS4TouchReport::default(); 3],
         }
     }
 }

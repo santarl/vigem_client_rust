@@ -299,6 +299,8 @@ pub struct RequestNotification {
 	pub overlapped: OVERLAPPED,
 	pub buffer: RequestNotificationVariant,
 }
+
+#[repr(C)]
 pub enum RequestNotificationVariant {
 	#[cfg(feature = "unstable_xtarget_notification")]
 	XUsb(XUsbRequestNotification),
@@ -316,11 +318,11 @@ impl RequestNotification {
 	#[inline]
 	pub unsafe fn ioctl(&mut self, device: HANDLE) {
 		let mut transferred = 0;
-
-		let buffer_ptr = &mut self.buffer as *mut _ as _;
-		match &self.buffer {
+		
+		match &mut self.buffer {
 			#[cfg(feature = "unstable_xtarget_notification")]
-			RequestNotificationVariant::XUsb(_) => {
+			RequestNotificationVariant::XUsb(ref mut buffer) => {
+				let buffer_ptr = buffer as *mut _ as _;
 				let buffer_size = mem::size_of::<XUsbRequestNotification>() as u32;
 				DeviceIoControl(
 					device,
@@ -333,7 +335,8 @@ impl RequestNotification {
 					&mut self.overlapped
 				);
 			},
-			RequestNotificationVariant::DS4(_) => {
+			RequestNotificationVariant::DS4(ref mut buffer) => {
+				let buffer_ptr = buffer as *mut _ as _;
 				let buffer_size = mem::size_of::<DS4RequestNotification>() as u32;
 				DeviceIoControl(
 					device,

@@ -95,8 +95,8 @@ target.wait_ready().unwrap();
 
 // Configure the gamepad pressing nothing but A and X buttons
 let gamepad = vigem_client::XGamepad {
-	buttons: vigem_client::XButtons!(A | X),
-	..Default::default()
+    buttons: vigem_client::XButtons!(A | X),
+    ..Default::default()
 };
 
 // Update the target
