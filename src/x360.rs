@@ -51,7 +51,7 @@ macro_rules! XButtons {
 
 impl XButtons {
 	/// Dpad up button.
-	pub const UP: u16     = 0x0001;
+	pub const UP: u16	 = 0x0001;
 	/// Dpad down button.
 	pub const DOWN: u16   = 0x0002;
 	/// Dpad left button.
@@ -67,19 +67,19 @@ impl XButtons {
 	/// Right thumb button.
 	pub const RTHUMB: u16 = 0x0080;
 	/// Left shoulder button.
-	pub const LB: u16     = 0x0100;
+	pub const LB: u16	 = 0x0100;
 	/// Right shoulder button.
-	pub const RB: u16     = 0x0200;
+	pub const RB: u16	 = 0x0200;
 	/// Xbox guide button.
 	pub const GUIDE: u16  = 0x0400;
 	/// A button.
-	pub const A: u16      = 0x1000;
+	pub const A: u16	  = 0x1000;
 	/// B button.
-	pub const B: u16      = 0x2000;
+	pub const B: u16	  = 0x2000;
 	/// X button.
-	pub const X: u16      = 0x4000;
+	pub const X: u16	  = 0x4000;
 	/// Y button.
-	pub const Y: u16      = 0x8000;
+	pub const Y: u16	  = 0x8000;
 }
 
 impl From<u16> for XButtons {
@@ -110,13 +110,14 @@ impl AsMut<u16> for XButtons {
 impl fmt::Debug for XButtons {
 	fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
 		if f.alternate() {
-			const NAMES: [&'static str; 16] = [
+			const NAMES: [&str; 16] = [
 				"UP", "DOWN", "LEFT", "RIGHT",
 				"START", "BACK", "LTHUMB", "RTHUMB",
 				"LB", "RB", "GUIDE", "?",
 				"A", "B", "X", "Y",
 			];
 			let mut comma = false;
+			#[allow(clippy::needless_range_loop)]
 			for index in 0..16 {
 				if self.raw & (1 << index) != 0 {
 					if comma {
