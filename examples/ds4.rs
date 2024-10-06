@@ -1,6 +1,6 @@
 use std::{thread, time};
 
-use vigem_client::{BatteryStatus, DS4Buttons, DS4ReportExBuilder, DS4SpecialButtons, DS4Status};
+use vigem_client::{BatteryStatus, DS4Buttons, DS4ReportExBuilder, DS4SpecialButtons, DS4Status, DS4TouchReport, DS4TouchPoint};
 
 fn main() {
     // Connect to the ViGEmBus driver
@@ -16,14 +16,26 @@ fn main() {
     // Wait for the virtual controller to be ready to accept updates
     target.wait_ready().unwrap();
 
+    let cycle_duration = 10.0; // 10 seconds for a full cycle
+    let half_cycle = cycle_duration / 2.0; // Half cycle for moving down or up
     let start = time::Instant::now();
+
     loop {
         let elapsed = start.elapsed().as_secs_f64();
 
-        // Play for 10 seconds
-        if elapsed >= 10.0 {
+        // Play for 1000 seconds
+        if elapsed >= 1000.0 {
             break;
         }
+
+        // Calculate the position of the touch point
+        let touch_y = if elapsed % cycle_duration < half_cycle {
+            // Moving down
+            ((elapsed % half_cycle) / half_cycle * 942.0) as u16 // 942 is the max Y value for the touchpad
+        } else {
+            // Moving up
+            (942.0 - ((elapsed % half_cycle) / half_cycle * 942.0)) as u16
+        };
 
         let report = DS4ReportExBuilder::new()
             // Spin the right thumb stick in circles
@@ -38,6 +50,8 @@ fn main() {
             .buttons(DS4Buttons::new().cross(true).circle(true))
             .special(DS4SpecialButtons::new().ps_home(true))
             .status(DS4Status::with_battery_status(BatteryStatus::Charging(8)))
+            // Set the touch report with the calculated Y position
+            .touch_reports(Some(DS4TouchReport::new(0, Some(DS4TouchPoint::new(1920, touch_y)), None)), None, None)
             .build();
 
         let _ = target.update_ex(&report);
