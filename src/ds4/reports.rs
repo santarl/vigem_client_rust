@@ -83,7 +83,9 @@ impl DS4TouchPoint {
             contact: 0,
             x_lo: (x & 0xFF) as u8,
             // x_hi_y_lo: (((x >> 8) & 0xF) << 4) as u8 | ((y & 0xF) as u8),
-            x_hi_y_lo: ((x >> 8) as u8) | ((y & 0x0F) as u8), // Combine higher bits of X and lower bits of Y
+            // x_hi_y_lo: ((x >> 8) as u8) | ((y & 0x0F) as u8), // Combine higher bits of X and lower bits of Y
+            // x_hi_y_lo: (((x >> 8) & 0xFF) | (y & 0xFF)) as u8,
+            x_hi_y_lo: ((x & 0xF00) >> 8 | (y & 0xF) << 4) as u8,
             y_hi: (y >> 4) as u8,
         }
     }
