@@ -81,8 +81,9 @@ impl DS4TouchPoint {
         let y = y.min(942);
         DS4TouchPoint {
             contact: 0,
-            x_lo: (x & 0x00FF) as u8,
-            x_hi_y_lo: (((x >> 8) & 0x00FF) << 4) as u8 | ((y & 0xF) as u8),
+            x_lo: (x & 0xFF) as u8,
+            // x_hi_y_lo: (((x >> 8) & 0xF) << 4) as u8 | ((y & 0xF) as u8),
+            x_hi_y_lo: ((x >> 8) as u8) | ((y & 0x0F) as u8), // Combine higher bits of X and lower bits of Y
             y_hi: (y >> 4) as u8,
         }
     }
